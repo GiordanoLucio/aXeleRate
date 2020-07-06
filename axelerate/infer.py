@@ -80,49 +80,6 @@ def setup_inference(config,weights,threshold=0.3,path=None):
         print("Folder {} is created.".format(dirname))
         os.makedirs(dirname)
 
-    if config['model']['type']=='SegNet':
-        print('Segmentation')           
-        # 1. Construct the model 
-        segnet = create_segnet(config['model']['architecture'],
-                                   input_size,
-                                   config['model']['n_classes'])   
-        # 2. Load the pretrained weights (if any) 
-        segnet.load_weights(weights)
-        predict_multiple(segnet._network, inp_dir=config['train']['valid_image_folder'], out_dir=dirname, overlay_img=True)
-        print(evaluate(segnet._network, inp_images_dir=config['train']['valid_image_folder'], annotations_dir=config['train']['valid_annot_folder']))
-
-
-    if config['model']['type']=='Classifier':
-        print('Classifier')    
-        if config['model']['labels']:
-            labels = config['model']['labels']
-        else:
-            labels = get_labels(config['train']['train_image_folder'])
-        # 1.Construct the model 
-        classifier = create_classifier(config['model']['architecture'],
-                                       labels,
-                                       input_size,
-                                       config['model']['fully-connected'],
-                                       config['model']['dropout'])   
-        # 2. Load the pretrained weights (if any) 
-        classifier.load_weights(weights)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        valid_image_folder = config['train']['valid_image_folder']
-        image_files_list = glob.glob(valid_image_folder + '/**/*.jpg', recursive=True)
-        inference_time = []
-        for filename in image_files_list:
-            output_path = os.path.join(dirname, os.path.basename(filename))
-            orig_image, input_image = prepare_image(filename, classifier)
-            prediction_time, img_class, prob = classifier.predict(input_image)
-            inference_time.append(prediction_time)
-            print(orig_image.shape)
-            cv2.putText(orig_image, "{}:{:.2f}".format(img_class[0], prob[0]), (10,30), font, orig_image.shape[1]/700 , (0, 0, 255), 2, True)
-            cv2.imwrite(output_path, orig_image)
-            show_image(output_path)
-            print("{}:{}".format(img_class[0], prob[0]))
-        if len(inference_time)>1:
-            print("Average prediction time:{} ms".format(sum(inference_time[1:])/len(inference_time[1:])))
-
     if config['model']['type']=='Detector':
         # 2. create yolo instance & predict
         yolo = create_yolo(config['model']['architecture'],

@@ -8,7 +8,7 @@ import sys
 import json
 from axelerate.networks.yolo.frontend import create_yolo, get_object_labels
 from axelerate.networks.classifier.frontend_classifier import create_classifier, get_labels
-from axelerate.networks.segnet.frontend_segnet import create_segnet
+#from axelerate.networks.segnet.frontend_segnet import create_segnet
 from axelerate.networks.common_utils.convert import Converter
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '4'
@@ -42,7 +42,7 @@ def train_from_config(config,project_folder):
                           input_size, config['train']['valid_image_folder'])
 
     #  Segmentation network
-    if config['model']['type']=='SegNet':
+    """if config['model']['type']=='SegNet':
         print('Segmentation')           
         # 1. Construct the model 
         segnet = create_segnet(config['model']['architecture'],
@@ -65,7 +65,7 @@ def train_from_config(config,project_folder):
                                            config['train']['valid_annot_folder'],
                                            config['train']['first_trainable_layer'],
                                            config['train']['ignore_zero_class'],
-                                           config['train']['valid_metric'])
+                                           config['train']['valid_metric'])"""
                
     #  Classifier
     """if config['model']['type']=='Classifier':
