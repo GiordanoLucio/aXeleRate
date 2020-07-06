@@ -68,7 +68,7 @@ def train_from_config(config,project_folder):
                                            config['train']['valid_metric'])
                
     #  Classifier
-    if config['model']['type']=='Classifier':
+    """if config['model']['type']=='Classifier':
         print('Classifier')           
         if config['model']['labels']:
             labels = config['model']['labels']
@@ -96,7 +96,7 @@ def train_from_config(config,project_folder):
                                                config['train']['valid_times'],
                                                config['train']['valid_image_folder'],
                                                config['train']['first_trainable_layer'],
-                                               config['train']['valid_metric'])
+                                               config['train']['valid_metric'])"""
 
 
 
