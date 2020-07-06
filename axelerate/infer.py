@@ -13,7 +13,7 @@ from axelerate.networks.yolo.backend.utils.box import draw_scaled_boxes
 from axelerate.networks.yolo.backend.utils.annotation import parse_annotation
 from axelerate.networks.yolo.backend.utils.eval.fscore import count_true_positives, calc_score
 #from axelerate.networks.segnet.frontend_segnet import create_segnet
-from axelerate.networks.segnet.predict import predict_multiple, evaluate
+#from axelerate.networks.segnet.predict import predict_multiple, evaluate
 from axelerate.networks.classifier.frontend_classifier import get_labels,create_classifier
 
 import os
