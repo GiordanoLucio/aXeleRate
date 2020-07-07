@@ -12,8 +12,6 @@ from axelerate.networks.yolo.frontend import create_yolo
 from axelerate.networks.yolo.backend.utils.box import draw_scaled_boxes
 from axelerate.networks.yolo.backend.utils.annotation import parse_annotation
 from axelerate.networks.yolo.backend.utils.eval.fscore import count_true_positives, calc_score
-#from axelerate.networks.segnet.frontend_segnet import create_segnet
-#from axelerate.networks.segnet.predict import predict_multiple, evaluate
 from axelerate.networks.classifier.frontend_classifier import get_labels,create_classifier
 
 import os
@@ -89,10 +87,15 @@ def setup_inference(config,weights,threshold=0.3,path=None):
         yolo.load_weights(weights)
 
         # 3. read image
-        annotations = parse_annotation(config['train']['valid_annot_folder'],
+        """annotations = parse_annotation(config['train']['valid_annot_folder'],
                                        config['train']['valid_image_folder'],
                                        config['model']['labels'],
-                                       is_only_detect=config['train']['is_only_detect'])
+                                       is_only_detect=config['train']['is_only_detect'])"""
+        # added testing directly in configuration
+        annotations = parse_annotation(config['test']['test_label_folder'],
+                                       config['test']['test_image_folder'],
+                                       config['model']['labels'],
+                                       is_only_detect=config['train']['is_only_detect'])                               
 
         n_true_positives = 0
         n_truth = 0
