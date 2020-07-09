@@ -28,7 +28,7 @@ def create_feature_extractor(architecture, input_size, weights = None):
     elif architecture == 'Tiny Yolo':
         feature_extractor = TinyYoloFeature(input_size, weights)
     else:
-        raise Exception('Architecture not supported! Name should be Full Yolo, Tiny Yolo, MobileNet1_0, MobileNet7_5, MobileNet5_0, MobileNet2_5, SqueezeNet, NASNetMobile, ResNet50 or DenseNet121')
+        raise Exception('Architecture not supported! K210 only supports small networks. It should be Tiny Yolo, MobileNet7_5, MobileNet5_0, MobileNet2_5')
     return feature_extractor
 
 
