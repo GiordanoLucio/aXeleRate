@@ -17,7 +17,7 @@ k210_converter_download_path=os.path.join(os.path.dirname(__file__),'ncc_linux_x
 nncase_download_url="https://github.com/kendryte/nncase/releases/download/v0.2.0-beta2/ncc_linux_x86_64.tar.xz"
 
 ##### add nncase v0.1.0 rc5
-nncase_download_url="https://github.com/kendryte/nncase/releases/download/v0.1.0-rc5/ncc-linux-x86_64.tar.xz"
+#nncase_download_url="https://github.com/kendryte/nncase/releases/download/v0.1.0-rc5/ncc-linux-x86_64.tar.xz"
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
