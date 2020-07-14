@@ -73,7 +73,7 @@ class TinyYoloFeature(BaseFeatureExtractor):
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
         # Layer 2 - 5
-        for i in range(0,4):
+        for i in range(0,2):
             x = Conv2D(24*(2**i), (3,3), strides=(1,1), padding='same', name='conv_' + str(i+2), use_bias=False)(x)
             x = BatchNormalization(name='norm_' + str(i+2))(x)
             x = LeakyReLU(alpha=0.1)(x)
@@ -86,7 +86,7 @@ class TinyYoloFeature(BaseFeatureExtractor):
         x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
 
         # Layer 7 - 8
-        for i in range(0,2):
+        for i in range(0,1):
             x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+7), use_bias=False)(x)
             x = BatchNormalization(name='norm_' + str(i+7))(x)
             x = LeakyReLU(alpha=0.1)(x)
