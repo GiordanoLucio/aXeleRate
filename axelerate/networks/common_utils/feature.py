@@ -28,7 +28,10 @@ def create_feature_extractor(architecture, input_size, weights = None):
     elif architecture == 'Tiny Yolo':
         feature_extractor = TinyYoloFeature(input_size, weights)
     elif architecture == 'self_dev':
-        feature_extractore = SelfExtractor(input_size, weights)
+        try:
+            feature_extractore = SelfExtractor(input_size, weights)
+        except:
+            print("failed instantiating a self developed network")
     else:
         raise Exception('Architecture not supported! K210 only supports small networks. It should be Tiny Yolo, MobileNet7_5, MobileNet5_0, MobileNet2_5')
     return feature_extractor
@@ -58,7 +61,8 @@ class BaseFeatureExtractor(object):
     def extract(self, input_image):
         return self.feature_extractor(input_image)
 
-class SelfExtractor (BaseFeatureExtractor):
+class TinyYoloFeature(BaseFeatureExtractor):
+    """docstring for ClassName"""
     def __init__(self, input_size, weights):
         input_image = Input(shape=(input_size[0], input_size[1], 3))
 
@@ -100,9 +104,8 @@ class SelfExtractor (BaseFeatureExtractor):
 
     def normalize(self, image):
         return image / 255.
-        
-class TinyYoloFeature(BaseFeatureExtractor):
-    """docstring for ClassName"""
+
+class SelfExtractor (BaseFeatureExtractor):
     def __init__(self, input_size, weights):
         input_image = Input(shape=(input_size[0], input_size[1], 3))
 
@@ -140,7 +143,6 @@ class TinyYoloFeature(BaseFeatureExtractor):
         else:
             print('Loaded backend weigths: '+weights)
             self.feature_extractor.load_weights(weights)
-
 
     def normalize(self, image):
         return image / 255.
