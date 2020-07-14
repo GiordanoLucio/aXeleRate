@@ -50,8 +50,8 @@ def train_from_config(config,project_folder):
                 labels = config['model']['labels']
             else:
                 labels = get_object_labels(config['train']['train_annot_folder'])
-        print(labels)
-
+        print("labels: ", labels)
+        print("training on: ", config['train']['train_image_folder'], "and validating on: ", config['train']['train_annot_folder'])
         # 1. Construct the model 
         yolo = create_yolo(config['model']['architecture'],
                            labels,
