@@ -29,7 +29,7 @@ def create_feature_extractor(architecture, input_size, weights = None):
         feature_extractor = TinyYoloFeature(input_size, weights)
     elif architecture == 'self_dev':
         try:
-            feature_extractore = SelfExtractor(input_size, weights)
+            feature_extractor = SelfExtractor(input_size, weights)
         except:
             print("failed instantiating a self developed network")
     else:
