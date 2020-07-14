@@ -89,12 +89,14 @@ def setup_inference(config,weights,threshold=0.3,path=None, dataset="testing"):
         # 3. read image
                 # 3. read image
         if dataset == 'testing':
+            print("the dataset used for testing is:", config['test']['test_image_folder'], " the annotations are: ", config['test']['test_label_folder'])
            # added testing directly in configuration
             annotations = parse_annotation(config['test']['test_label_folder'],
                                         config['test']['test_image_folder'],
                                         config['model']['labels'],
                                         is_only_detect=config['train']['is_only_detect'])
         else:
+            print("the dataset used for testing is:", config['train']['valid_image_folder'], " the annotations are: ", config['train']['valid_annot_folder'])
             annotations = parse_annotation(config['train']['valid_annot_folder'],
                                         config['train']['valid_image_folder'],
                                         config['model']['labels'],
