@@ -63,7 +63,7 @@ def prepare_image(img_path, network):
     input_image = np.expand_dims(input_image, 0)
     return orig_image, input_image
 
-def setup_inference(config,weights,threshold=0.3,path=None):
+def setup_inference(config,weights,threshold=0.3,path=None, dataset="testing"):
     #added for compatibility with < 0.5.7 versions
     try:
         input_size = config['model']['input_size'][:]
@@ -87,15 +87,18 @@ def setup_inference(config,weights,threshold=0.3,path=None):
         yolo.load_weights(weights)
 
         # 3. read image
-        """annotations = parse_annotation(config['train']['valid_annot_folder'],
-                                       config['train']['valid_image_folder'],
-                                       config['model']['labels'],
-                                       is_only_detect=config['train']['is_only_detect'])"""
-        # added testing directly in configuration
-        annotations = parse_annotation(config['test']['test_label_folder'],
-                                       config['test']['test_image_folder'],
-                                       config['model']['labels'],
-                                       is_only_detect=config['train']['is_only_detect'])                               
+                # 3. read image
+        if dataset == 'testing':
+           # added testing directly in configuration
+            annotations = parse_annotation(config['test']['test_label_folder'],
+                                        config['test']['test_image_folder'],
+                                        config['model']['labels'],
+                                        is_only_detect=config['train']['is_only_detect'])
+        else:
+            annotations = parse_annotation(config['train']['valid_annot_folder'],
+                                        config['train']['valid_image_folder'],
+                                        config['model']['labels'],
+                                        is_only_detect=config['train']['is_only_detect'])                         
 
         n_true_positives = 0
         n_truth = 0

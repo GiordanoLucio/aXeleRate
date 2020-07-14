@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import numpy as np
 from scipy.optimize import linear_sum_assignment as linear_assignment 
  
@@ -7,7 +6,6 @@ class BoxMatcher(object):
     # Args
         boxes1 : ndarray, shape of (N, 4)
             (x1, y1, x2, y2) ordered
-
         boxes2 : ndarray, shape of (M, 4)
             (x1, y1, x2, y2) ordered
     """
@@ -27,7 +25,8 @@ class BoxMatcher(object):
                                               np.ones((len(boxes2),)))
             else:
                 self._iou_matrix = self._calc(boxes1, boxes2, labels1, labels2)
-            self._match_pairs = linear_assignment(-1*self._iou_matrix)
+            self._match_pairs = np.asarray(linear_assignment(-1*self._iou_matrix))
+            self._match_pairs = np.transpose(self._match_pairs)
     
     def match_idx_of_box1_idx(self, box1_idx):
         """
@@ -139,6 +138,3 @@ if __name__ == "__main__":
     label = np.array(["cc"])
     label_score = (labels == label).astype(np.float)
     print(label_score)
-    
-    
-    
