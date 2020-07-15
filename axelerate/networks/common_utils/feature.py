@@ -116,13 +116,12 @@ class SelfExtractor (BaseFeatureExtractor):
         input_image = Input(shape=(input_size[0], input_size[1], 3))
 
         # Layer 1
-        x = Conv2D(32, (3,3), strides=(1,1), padding='same', name='conv_1', use_bias=False)(input_image)
+        x = Conv2D(16, (3,3), strides=(1,1), padding='same', name='conv_1', use_bias=False)(input_image)
         x = BatchNormalization(name='norm_1')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        """
-        x = Conv2D(24, (3,3), strides=(1,1), padding='same', name='conv_' + str(2), use_bias=False)(x)
+        """x = Conv2D(24, (3,3), strides=(1,1), padding='same', name='conv_' + str(2), use_bias=False)(x)
         x = BatchNormalization(name='norm_' + str(2))(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
@@ -130,8 +129,11 @@ class SelfExtractor (BaseFeatureExtractor):
         x = Conv2D(48, (3,3), strides=(1,1), padding='same', name='conv_' + str(1+2), use_bias=False)(x)
         x = BatchNormalization(name='norm_' + str(1+2))(x)
         x = LeakyReLU(alpha=0.1)(x)
+        x = MaxPooling2D(pool_size=(2, 2))(x)"""
+        x = Conv2D(32, (3,3), strides=(1,1), padding='same', name='conv_' + str(2), use_bias=False)(x)
+        x = BatchNormalization(name='norm_' + str(1+2))(x)
+        x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
-        """
 
         # Layer 6
         x = Conv2D(64, (3,3), strides=(1,1), padding='same', name='conv_6', use_bias=False)(x)
