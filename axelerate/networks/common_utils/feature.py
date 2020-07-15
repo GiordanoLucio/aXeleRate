@@ -8,7 +8,7 @@ from keras.layers.merge import concatenate
 
 from .mobilenet_sipeed.mobilenet import MobileNet
 
-def create_feature_extractor(architecture, input_size, weights = None):
+def create_feature_extractor(architecture, input_size, weiwghts = None):
     """
     # Args
         architecture : str
@@ -32,6 +32,11 @@ def create_feature_extractor(architecture, input_size, weights = None):
             feature_extractor = SelfExtractor(input_size, weights)
         except:
             print("failed instantiating a self developed network")
+    elif architecture == 'Reduced Tiny Yolo':
+        try:
+            feature_extractor = ReducedTinyYoloFeature(input_size, weights)
+        except:
+            print("failed while instantiating reduced tiny yolo!")
     else:
         raise Exception('Architecture not supported! K210 only supports small networks. It should be Tiny Yolo, MobileNet7_5, MobileNet5_0, MobileNet2_5')
     return feature_extractor
@@ -106,33 +111,45 @@ class TinyYoloFeature(BaseFeatureExtractor):
         return image / 255.
 
 class SelfExtractor (BaseFeatureExtractor):
+    #in this class, we define a self built nn
     def __init__(self, input_size, weights):
         input_image = Input(shape=(input_size[0], input_size[1], 3))
 
         # Layer 1
-        x = Conv2D(16, (3,3), strides=(1,1), padding='same', name='conv_1', use_bias=False)(input_image)
+        x = Conv2D(32, (3,3), strides=(1,1), padding='same', name='conv_1', use_bias=False)(input_image)
         x = BatchNormalization(name='norm_1')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        # Layer 2 - 5
-        for i in range(0,2):
-            x = Conv2D(24*(2**i), (3,3), strides=(1,1), padding='same', name='conv_' + str(i+2), use_bias=False)(x)
-            x = BatchNormalization(name='norm_' + str(i+2))(x)
-            x = LeakyReLU(alpha=0.1)(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
+        # Layer 2,3
 
-        # Layer 6
+        x = Conv2D(64, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+2), use_bias=False)(x)
+        x = BatchNormalization(name='norm_' + str(i+2))(x)
+        x = LeakyReLU(alpha=0.1)(x)
+        x = MaxPooling2D(pool_size=(2, 2))(x)
+
+        x = Conv2D(64, (1,1), strides=(1,1), padding='same', name='conv_' + str(i+2), use_bias=False)(x)
+        x = BatchNormalization(name='norm_' + str(2))(x)
+        x = LeakyReLU(alpha=0.1)(x)
+        x = MaxPooling2D(pool_size=(2, 2))(x)
+
+
+        x = Conv2D(128, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+2), use_bias=False)(x)
+        x = BatchNormalization(name='norm_' + str(2))(x)
+        x = LeakyReLU(alpha=0.1)(x)
+        x = MaxPooling2D(pool_size=(2, 2))(x)
+
+        # Layer 4
         x = Conv2D(256, (3,3), strides=(1,1), padding='same', name='conv_6', use_bias=False)(x)
         x = BatchNormalization(name='norm_6')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
 
-        # Layer 7 - 8
-        for i in range(0,1):
-            x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+7), use_bias=False)(x)
-            x = BatchNormalization(name='norm_' + str(i+7))(x)
-            x = LeakyReLU(alpha=0.1)(x)
+        # Layer 5
+
+        x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+7), use_bias=False)(x)
+        x = BatchNormalization(name='norm_' + str(7))(x)
+        x = LeakyReLU(alpha=0.1)(x)
 
         self.feature_extractor = Model(input_image, x)
 
@@ -148,7 +165,8 @@ class SelfExtractor (BaseFeatureExtractor):
         return image / 255.
 
 class ReducedTinyYoloFeature(BaseFeatureExtractor):
-    """docstring for ClassName"""
+    #standard tiny yolo has 9 convolutional layers
+    #in this class we try to reduce the layers of tiny yolo to see if we can improve its performances
     def __init__(self, input_size, weights):
         input_image = Input(shape=(input_size[0], input_size[1], 3))
 
@@ -158,21 +176,21 @@ class ReducedTinyYoloFeature(BaseFeatureExtractor):
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        # Layer 2 - 5
-        for i in range(0,4):
+        # Layer 2 - 4
+        for i in range(0,3):
             x = Conv2D(24*(2**i), (3,3), strides=(1,1), padding='same', name='conv_' + str(i+2), use_bias=False)(x)
             x = BatchNormalization(name='norm_' + str(i+2))(x)
             x = LeakyReLU(alpha=0.1)(x)
             x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        # Layer 6
+        # Layer 5
         x = Conv2D(256, (3,3), strides=(1,1), padding='same', name='conv_6', use_bias=False)(x)
         x = BatchNormalization(name='norm_6')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
 
-        # Layer 7 - 8
-        for i in range(0,2):
+        # Layer 6
+        for i in range(0,1):
             x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+7), use_bias=False)(x)
             x = BatchNormalization(name='norm_' + str(i+7))(x)
             x = LeakyReLU(alpha=0.1)(x)
