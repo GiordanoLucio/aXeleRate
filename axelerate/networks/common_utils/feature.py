@@ -8,7 +8,7 @@ from keras.layers.merge import concatenate
 
 from .mobilenet_sipeed.mobilenet import MobileNet
 
-def create_feature_extractor(architecture, input_size, weiwghts = None):
+def create_feature_extractor(architecture, input_size, weights = None):
     """
     # Args
         architecture : str
