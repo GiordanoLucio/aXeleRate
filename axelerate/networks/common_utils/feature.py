@@ -105,8 +105,6 @@ class TinyYoloFeature(BaseFeatureExtractor):
         else:
             print('Loaded backend weigths: '+weights)
             self.feature_extractor.load_weights(weights)
-
-
     def normalize(self, image):
         return image / 255.
 
@@ -150,17 +148,8 @@ class SelfExtractor (BaseFeatureExtractor):
         x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+7), use_bias=False)(x)
         x = BatchNormalization(name='norm_' + str(7))(x)
         x = LeakyReLU(alpha=0.1)(x)
-
+        print("now building the model: Self built...")
         self.feature_extractor = Model(input_image, x)
-
-        if weights == 'imagenet':
-            print('Imagenet for YOLO backend are not available yet, defaulting to random weights')
-        elif weights == None:
-            pass
-        else:
-            print('Loaded backend weigths: '+weights)
-            self.feature_extractor.load_weights(weights)
-
     def normalize(self, image):
         return image / 255.
 
@@ -194,17 +183,8 @@ class ReducedTinyYoloFeature(BaseFeatureExtractor):
             x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+7), use_bias=False)(x)
             x = BatchNormalization(name='norm_' + str(i+7))(x)
             x = LeakyReLU(alpha=0.1)(x)
-
+        print("now building the model: Reduced Tiny Yolo...")
         self.feature_extractor = Model(input_image, x)
-
-        if weights == 'imagenet':
-            print('Imagenet for YOLO backend are not available yet, defaulting to random weights')
-        elif weights == None:
-            pass
-        else:
-            print('Loaded backend weigths: '+weights)
-            self.feature_extractor.load_weights(weights)
-
 
     def normalize(self, image):
         return image / 255.
