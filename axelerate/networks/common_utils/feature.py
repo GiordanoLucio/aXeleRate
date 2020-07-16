@@ -121,36 +121,32 @@ class SelfExtractor (BaseFeatureExtractor):
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        x = Conv2D(24, (3,3), strides=(1,1), padding='same', name='conv_' + str(2), use_bias=False)(x)
-        x = BatchNormalization(name='norm_' + str(2))(x)
+        x = Conv2D(24, (3,3), strides=(1,1), padding='same', name='conv_2', use_bias=False)(x)
+        x = BatchNormalization(name='norm_2')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        x = Conv2D(48, (3,3), strides=(1,1), padding='same', name='conv_' + str(3), use_bias=False)(x)
-        x = BatchNormalization(name='norm_' + str(1+2))(x)
+        x = Conv2D(48, (3,3), strides=(1,1), padding='same', name='conv_3', use_bias=False)(x)
+        x = BatchNormalization(name='norm_3')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        # Layer 6
         x = Conv2D(64, (3,3), strides=(1,1), padding='same', name='conv_4', use_bias=False)(x)
+        x = BatchNormalization(name='norm4')(x)
+        x = LeakyReLU(alpha=0.1)(x)
+        x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
+
+        x = Conv2D(128, (3,3), strides=(1,1), padding='same', name='conv_5', use_bias=False)(x)
+        x = BatchNormalization(name='norm_5')(x)
+        x = LeakyReLU(alpha=0.1)(x)
+
+        x = Conv2D(256, (3,3), strides=(1,1), padding='same', name='conv_6', use_bias=False)(x)
         x = BatchNormalization(name='norm_6')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
 
-        # Layer 7 - 8
-        x = Conv2D(128, (3,3), strides=(1,1), padding='same', name='conv_' + str(5), use_bias=False)(x)
-        x = BatchNormalization(name='norm_' + str(7))(x)
-        x = LeakyReLU(alpha=0.1)(x)
-
-        # Layer 6
-        x = Conv2D(256, (3,3), strides=(1,1), padding='same', name='conv_6', use_bias=False)(x)
-        x = BatchNormalization(name='norm_8')(x)
-        x = LeakyReLU(alpha=0.1)(x)
-        x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
-
-        # Layer 7 - 8
-        x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(7), use_bias=False)(x)
-        x = BatchNormalization(name='norm_' + str(9))(x)
+        x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_7', use_bias=False)(x)
+        x = BatchNormalization(name='norm_7')(x)
         x = LeakyReLU(alpha=0.1)(x)
         print("now building the model: self_dev...")
 
@@ -179,25 +175,23 @@ class ReducedTinyYoloFeature(BaseFeatureExtractor):
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
 
-        x = Conv2D(24, (3,3), strides=(1,1), padding='same', name='conv_' + str(2), use_bias=False)(x)
-        x = BatchNormalization(name='norm_' + str(2))(x)
+        x = Conv2D(24, (3,3), strides=(1,1), padding='same', name='conv_2', use_bias=False)(x)
+        x = BatchNormalization(name='norm_2')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        x = Conv2D(48, (3,3), strides=(1,1), padding='same', name='conv_' + str(1+2), use_bias=False)(x)
-        x = BatchNormalization(name='norm_' + str(1+2))(x)
+        x = Conv2D(48, (3,3), strides=(1,1), padding='same', name='conv_3', use_bias=False)(x)
+        x = BatchNormalization(name='norm_3')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2))(x)
 
-        # Layer 6
-        x = Conv2D(256, (3,3), strides=(1,1), padding='same', name='conv_6', use_bias=False)(x)
-        x = BatchNormalization(name='norm_6')(x)
+        x = Conv2D(256, (3,3), strides=(1,1), padding='same', name='conv_4', use_bias=False)(x)
+        x = BatchNormalization(name='norm_4')(x)
         x = LeakyReLU(alpha=0.1)(x)
         x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
 
-        # Layer 7 - 8
-        x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(7), use_bias=False)(x)
-        x = BatchNormalization(name='norm_' + str(7))(x)
+        x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_5', use_bias=False)(x)
+        x = BatchNormalization(name='norm_5')(x)
         x = LeakyReLU(alpha=0.1)(x)
         print("now building the model: Reduced Tiny Yolo...")
         self.feature_extractor = Model(input_image, x)
