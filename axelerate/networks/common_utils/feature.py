@@ -37,6 +37,8 @@ def create_feature_extractor(architecture, input_size, weights = None):
             feature_extractor = ReducedTinyYoloFeature(input_size, weights)
         except:
             print("failed while instantiating reduced tiny yolo!")
+    elif architecture == 'Pruned Tiny Yolo':
+        feature_extractor = PrunedTinyYolo(input_size, weights)
     else:
         raise Exception('Architecture not supported! K210 only supports small networks. It should be Tiny Yolo, MobileNet7_5, MobileNet5_0, MobileNet2_5')
     return feature_extractor
@@ -206,7 +208,47 @@ class ReducedTinyYoloFeature(BaseFeatureExtractor):
     def normalize(self, image):
         return image / 255.
 
+class PrunedTinyYolo(BaseFeatureExtractor):
+    """docstring for ClassName"""
+    def __init__(self, input_size, weights):
+        input_image = Input(shape=(input_size[0], input_size[1], 3))
 
+        # Layer 1
+        x = Conv2D(16, (3,3), strides=(1,1), padding='same', name='conv_1', use_bias=False)(input_image)
+        x = BatchNormalization(name='norm_1')(x)
+        x = LeakyReLU(alpha=0.1)(x)
+        x = MaxPooling2D(pool_size=(2, 2))(x)
+
+        # Layer 2 - 5
+        for i in range(0,4):
+            x = Conv2D(24*(2**i), (3,3), strides=(1,1), padding='same', name='conv_' + str(i+2), use_bias=False)(x)
+            x = BatchNormalization(name='norm_' + str(i+2))(x)
+            x = LeakyReLU(alpha=0.1)(x)
+            x = MaxPooling2D(pool_size=(2, 2))(x)
+
+        # Layer 6
+        x = Conv2D(256, (3,3), strides=(1,1), padding='same', name='conv_6', use_bias=False)(x)
+        x = BatchNormalization(name='norm_6')(x)
+        x = LeakyReLU(alpha=0.1)(x)
+        x = MaxPooling2D(pool_size=(2, 2), strides=(1,1), padding='same')(x)
+
+        # Layer 7 - 8
+        for i in range(0,1):
+            x = Conv2D(312, (3,3), strides=(1,1), padding='same', name='conv_' + str(i+7), use_bias=False)(x)
+            x = BatchNormalization(name='norm_' + str(i+7))(x)
+            x = LeakyReLU(alpha=0.1)(x)
+
+        self.feature_extractor = Model(input_image, x)
+
+        if weights == 'imagenet':
+            print('Imagenet for YOLO backend are not available yet, defaulting to random weights')
+        elif weights == None:
+            pass
+        else:
+            print('Loaded backend weigths: '+weights)
+            self.feature_extractor.load_weights(weights)
+    def normalize(self, image):
+        return image / 255.
 class MobileNetFeature(BaseFeatureExtractor):
     """docstring for ClassName"""
     def __init__(self, input_size, weights, alpha):
